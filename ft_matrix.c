@@ -6,13 +6,14 @@
 /*   By: trobicho <trobicho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/09 23:51:18 by trobicho          #+#    #+#             */
-/*   Updated: 2019/04/17 17:32:51 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/04/18 01:51:19 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "ft_init_mlx.h"
+
+#include "ft_point.h"
 #include <math.h>
 
-static void	ft_matrix_define(t_mymlx *ml, double m[4][4])
+static void	ft_matrix_define(double m1[4][4], double m2[4][4])
 {
 	int	i;
 	int	j;
@@ -23,14 +24,14 @@ static void	ft_matrix_define(t_mymlx *ml, double m[4][4])
 		j = 0;
 		while(j < 4)
 		{
-			ml->matrix[i][j] = m[i][j];
+			m1[i][j] = m2[i][j];
 			j++;
 		}
 		i++;
 	}
 }
 
-static void	ft_matrix_mul(t_mymlx *ml, double m[4][4])
+static void	ft_matrix_mul(double m1[4][4], double m2[4][4])
 {
 	int		i;
 	int		j;
@@ -47,14 +48,14 @@ static void	ft_matrix_mul(t_mymlx *ml, double m[4][4])
 			mr[i][j] = 0.0;
 			while(k < 4)
 			{
-				mr[i][j] += ml->matrix[i][k] * m[k][j];
+				mr[i][j] += m1[i][k] * m2[k][j];
 				k++;
 			}
 			j++;
 		}
 		i++;
 	}
-	ft_matrix_define(ml, mr);
+	ft_matrix_define(m1, mr);
 }
 
 void		ft_matrix_id(double m[4][4])
@@ -73,63 +74,60 @@ void		ft_matrix_id(double m[4][4])
 	m[3][3] = 1;
 }
 
-void		ft_rotate(t_mymlx *ml, double angle, double x, double y, double z)
+void		ft_rotate(double m[4][4], double angle, double x, double y, double z)
 {
-	double	m[4][4];
+	double	md[4][4];
 	double	c_a;
 	double	s_a;
 
 	c_a = cos(angle);
 	s_a = sin(angle);
-	ft_matrix_id(m);
+	ft_matrix_id(md);
+	md[0][0] = x * x * (1 - c_a) + c_a;
+	md[0][1] = x * y * (1 - c_a) - z * s_a;
+	md[0][2] = x * z * (1 - c_a) + y * s_a;
 
-	ft_matrix_id(m);
-	m[0][0] = x + y * c_a + z * c_a;
-	m[0][1] = z * -s_a;
-	m[0][2] = y * -s_a;
-
-	m[1][0] = z * s_a;
-	m[1][1] = x * c_a + y + z * c_a;
-	m[1][2] = x * s_a;
-
-	m[2][0] = y * s_a;
-	m[2][1] = x * -s_a;
-	m[2][2] = x * c_a + y * c_a + z;
-	ft_matrix_mul(ml, m);
+	md[1][0] = y * x * (1 - c_a) + z * s_a;
+	md[1][1] = y * y * (1 - c_a) + c_a;
+	md[1][2] = y * z * (1 - c_a) - x * s_a;
+	
+	md[2][0] = z * x * (1 - c_a) - y * s_a;
+	md[2][1] = z * y * (1 - c_a) + x * s_a;
+	md[2][2] = z * z * (1 - c_a) + c_a;
+	ft_matrix_mul(md, m);
+	ft_matrix_define(m, md);
 }
 
-void		ft_scale(t_mymlx *ml, double x, double y, double z)
+void		ft_scale(double m[4][4], double x, double y, double z)
 {
-	double	m[4][4];
+	double	md[4][4];
 
-	ft_matrix_id(m);
-	m[0][0] = x;
-	m[1][1] = y;
-	m[2][2] = z;
-	ft_matrix_mul(ml, m);
+	ft_matrix_id(md);
+	md[0][0] = x;
+	md[1][1] = y;
+	md[2][2] = z;
+	ft_matrix_mul(md, m);
+	ft_matrix_define(m, md);
 }
 	
-void		ft_translate(t_mymlx *ml, double x, double y, double z)
+void		ft_translate(double m[4][4], double x, double y, double z)
 {
-	double	m[4][4];
+	double	md[4][4];
 
-	ft_matrix_id(m);
-	m[0][3] = x;
-	m[1][3] = y;
-	m[2][3] = z;
-	ft_matrix_mul(ml, m);
+	ft_matrix_id(md);
+	md[0][3] = x;
+	md[1][3] = y;
+	md[2][3] = z;
+	ft_matrix_mul(m, md);
 }
 
-t_point_3d	ft_matrix_apply(t_mymlx *ml, t_point_3d v)
+t_point_3d	ft_matrix_apply(double m[4][4], t_point_3d v)
 {
 	t_point_3d	v_r;
 
-	v_r.x = v.x * ml->matrix[0][0] + v.y * ml->matrix[0][1]
-				+ v.z * ml->matrix[0][2] + ml->matrix[0][3];
-	v_r.y = v.x * ml->matrix[1][0] + v.y * ml->matrix[1][1]
-				+ v.z * ml->matrix[1][2] + ml->matrix[1][3];
-	v_r.z = v.x * ml->matrix[2][0] + v.y * ml->matrix[2][1]
-				+ v.z * ml->matrix[2][2] + ml->matrix[2][3];
+	v_r.x = v.x * m[0][0] + v.y * m[0][1] + v.z * m[0][2] + m[0][3];
+	v_r.y = v.x * m[1][0] + v.y * m[1][1] + v.z * m[1][2] + m[1][3];
+	v_r.z = v.x * m[2][0] + v.y * m[2][1] + v.z * m[2][2] + m[2][3];
 	//v_r->x = ml->matrix[3][0] + ml->matrix[3][1] + matrix[3][2] + matrix[3][3];
 	return (v_r);
 }

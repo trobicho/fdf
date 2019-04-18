@@ -6,7 +6,7 @@
 /*   By: trobicho <trobicho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 11:53:49 by trobicho          #+#    #+#             */
-/*   Updated: 2019/04/17 16:44:03 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/04/18 01:24:27 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ typedef struct	s_mymlx
 	void		*img_ptr;
 	int			w;
 	int			h;
+	double		matrix_repair[4][4];
 	double		matrix[4][4];
 	t_map		*map;
+	int			button;
 }				t_mymlx;
 
 int	ft_init_mlx(t_mymlx *init, int w, int h, char *name);

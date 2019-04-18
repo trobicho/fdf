@@ -6,12 +6,14 @@
 /*   By: trobicho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 16:40:49 by trobicho          #+#    #+#             */
-/*   Updated: 2019/04/17 20:49:32 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/04/17 23:53:52 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_map.h"
 #include "ft_line.h"
+#include "get_next_line.h"
+#include "./libft/libft.h" //a changer
 #include <stdlib.h>
 
 void	ft_map_alloc(t_map *map, int w, int h)
@@ -23,14 +25,49 @@ void	ft_map_alloc(t_map *map, int w, int h)
 	}
 }
 
-/*
-void	ft_map_parse(t_map *map)
+int		ft_map_parse(t_map *map, int fd)
 {
 	char	*line;
+	char	*ptr;
+	char	*ptrSave;
+	int		pz;
+	int		x;
+	int		y;
+	int		w;
 
-	line = get_next_line();
+	w = 0;
+	y = 0;
+	while ((x = get_next_line(fd, &line)) > 0)
+	{
+		ptr = line;
+		ptrSave = line;
+		x = 0;
+		while ((ptr = ft_atoi_seek(ptr, &pz)))
+		{
+			printf("%d ", pz);
+			if (ptr == ptrSave)
+			{
+				if (w > 0 && x == w)
+					break ;
+				else if (w == 0 && x > 0)
+				{
+					w = x;
+					break;
+				}
+				else
+				{
+					printf("(ret -1)%d %d\n", w, x);
+					return (-1);
+				}
+			}
+			x++;
+			ptrSave = ptr;
+		}
+		printf("\n");
+		y++;
+	}
+	return (x);
 }
-*/
 
 void	ft_map_test(t_map *map)
 {
