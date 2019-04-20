@@ -6,16 +6,17 @@
 /*   By: trobicho <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/06 17:27:28 by trobicho          #+#    #+#             */
-/*   Updated: 2019/04/17 17:26:30 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/04/20 17:49:35 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_point.h"
 #include "ft_pixel.h"
 #include "ft_line.h"
+#include "ft_init_mlx.h"
 #include <math.h>
 
-void	ft_drawline(void *img_ptr, t_point_2d a, t_point_2d b, Uint color)
+void	ft_drawline(t_mymlx *mlx, t_point_2d a, t_point_2d b)
 {
 	double	xs;
 	double	ys;
@@ -39,7 +40,8 @@ void	ft_drawline(void *img_ptr, t_point_2d a, t_point_2d b, Uint color)
 		y = (double)a.y;
 		while (len < lenMax)
 		{
-			ft_putpixel(img_ptr, (int)x, (int)y, color);
+			if (x > 0 && x < mlx->w && y > 0 && y < mlx->h)
+				ft_putpixel(mlx, (int)x, (int)y, a.color);
 			x += xs;
 			y += ys;
 			len++;

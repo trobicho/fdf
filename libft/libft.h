@@ -6,7 +6,7 @@
 /*   By: trobicho <trobicho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/14 15:41:39 by trobicho          #+#    #+#             */
-/*   Updated: 2019/04/17 23:25:34 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/04/20 00:31:35 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,5 @@ void			*ft_memjoin(void const *s1, void const *s2, size_t l1,
 							size_t l2);
 char			*ft_strnchr(const char *s, size_t n, int c);
 char			*ft_strndup(const char *s, size_t n);
-char			*ft_atoi_seek(const char *str, int *ret);
-
+long			ft_strtol(const char *str, char **endptr, int base);
 #endif

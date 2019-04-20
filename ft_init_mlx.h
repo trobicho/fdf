@@ -6,7 +6,7 @@
 /*   By: trobicho <trobicho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 11:53:49 by trobicho          #+#    #+#             */
-/*   Updated: 2019/04/18 01:24:27 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/04/20 20:32:32 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,10 @@
 
 typedef struct	s_point_3d
 {
-	double	x;
-	double	y;
-	double	z;
+	double			x;
+	double			y;
+	double			z;
+	unsigned int	color;
 }				t_point_3d;
 
 typedef struct	s_map
@@ -38,6 +39,10 @@ typedef struct	s_mymlx
 	double		matrix[4][4];
 	t_map		*map;
 	int			button;
+	char		*buf;
+	int			bpp;
+	int			sline;
+	int			endian;
 }				t_mymlx;
 
 int	ft_init_mlx(t_mymlx *init, int w, int h, char *name);

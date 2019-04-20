@@ -6,7 +6,7 @@
 /*   By: trobicho <trobicho@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/07 11:47:15 by trobicho          #+#    #+#             */
-/*   Updated: 2019/04/10 01:33:06 by trobicho         ###   ########.fr       */
+/*   Updated: 2019/04/20 20:32:55 by trobicho         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,9 @@ int	ft_init_mlx(t_mymlx *init, int w, int h, char *name)
 	else
 		init->win_ptr = mlx_new_window(init->mlx_ptr, w, h, "no_name");
 	init->img_ptr = mlx_new_image(init->mlx_ptr, w, h);
+	init->buf = mlx_get_data_addr(init->img_ptr, &init->bpp,
+									&init->sline, &init->endian);
+	init->bpp /= 8;
 	init->w = w;
 	init->h = h;
 	return (0);
